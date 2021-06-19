@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, 
+	initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://unpkg.com/vue@next"></script>
+	<style>
+		.letters {
+			margin: 10px;
+			padding: 5px;
+			border: 3px solid black;
+		}
+
+		.guesses {
+			display: inline-block;
+			border-bottom: 3px solid black;
+			width: 20px;
+			margin-right: 10px
+		}
+	</style>
+</head>
+
+<body>
+	<div id="counter">
+		<p>Tries Left {{tries}}</p>
+		<p> Guessed word
+			<div>
+			<span class="guesses" v-for="(word, index) in guessedWord" :key="index">
+				{{ word !== undefined ? word: ""}}
+			</span>
+			</div>
+		</p>
+		<p> My guesses </p>
+		<span @click="handleGuess(letter)" class='letters' v-for="(letter, index) in letters" :key="index">
+			{{letter}}
+		</span>
+
+	</div>
+</body>
+
+<script>
+	const Counter = {
+		data: function () {
+			return {
+				tries: 5,
+				correctGuesses: [],
+				my_guesses: [],
+				word: ["c", "a", "t"],
+				letters: [
+					'a', 'b', 'c', 'd', 'z', 'y', 'q', 't'
+				]
+			}
+		},
+		computed: {
+			// computed are rendering logic
+			guessedWord() {
+				return this.word.map((letter) => {
+					if (this.correctGuesses.includes(letter)) {
+						return letter
+					} else {
+						return undefined
+					}
+
+				})
+			}
+		},
+		methods: {
+			handleGuess(letter) {
+				const isInWord = this.word.includes(letter)
+				if (isInWord === false) {
+					this.tries = this.tries - 1
+				} else {
+					const letterIndex = this.word.indexOf(letter)
+					this.correctGuesses[letterIndex] = letter
+				}
+			}
+		}
+	}
+
+	Vue.createApp(Counter).mount('#counter')
+</script>
+
+</html>
